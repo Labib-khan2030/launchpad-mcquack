@@ -13,7 +13,7 @@ export const MatrixRain = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const letters = 'ｦｧｨｩｪｫｬｭｮｯ ｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿ ﾀﾁﾂﾃﾄﾅﾆﾇﾈﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾗﾘﾙﾚﾜﾝ';
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
     const fontSize = 16;
     const columns = canvas.width / fontSize;
     const drops: number[] = [];
