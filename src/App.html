@@ -1,27 +1,844 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cønexus AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .invisible { visibility: hidden !important; }
+    </style>
+    <style>
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+      .animate-delay-200 { animation-delay: 0.2s; opacity: 0; }
+      .animate-delay-300 { animation-delay: 0.3s; opacity: 0; }
+      .hover-blur:hover img { filter: blur(4px); }
+      .hover-blur figcaption { opacity: 0; transition: opacity 0.3s; }
+      .hover-blur:hover figcaption { opacity: 1; }
+      .nav-link::after { content: ''; position: absolute; left: 0; top: 100%; width: 0; height: 2px; background: #e879f9; transition: width 0.3s; }
+      .nav-link:hover::after { width: 100%; }
+      .card-glow { transition: all 0.3s; }
+      .card-glow:hover { transform: translateY(-2px); }
+      .card-glow:hover .glow-bg { opacity: 1; }
+      .glow-bg { opacity: 0; transition: opacity 0.3s; }
+      .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+      .accordion-content.open { max-height: 500px; }
+      .accordion-icon { transition: transform 0.3s; }
+      .accordion-icon.open { transform: rotate(90deg); }
+      .review-active { transform: scale(1.02); transition: transform 0.3s; }
+      .mobile-menu { transform: translateX(100%); transition: transform 0.3s ease-out; }
+      .mobile-menu.open { transform: translateX(0); }
+    </style>
+    <style>
+      .invisible { visibility: hidden !important; }
+    </style>
+    <style id="aura-editor-visibility-style">
+      .invisible { visibility: hidden !important; }
+    </style>
 
-const queryClient = new QueryClient();
+    <script>
+      // Configure Tailwind to include our custom 3D transform utilities
+      tailwind.config = {
+        theme: {
+          extend: {}
+        },
+        plugins: [
+          function({ addUtilities }) {
+            const rotateXUtilities = {};
+            const rotateYUtilities = {};
+            const rotateZUtilities = {};
+            const rotateValues = [0, 5, 10, 15, 20, 30, 45, 75];
+            rotateValues.forEach((value) => {
+              rotateXUtilities[`.rotate-x-${value}`] = {
+                '--tw-rotate-x': `${value}deg`,
+                transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+              };
+              if (value !== 0) {
+                rotateXUtilities[`.-rotate-x-${value}`] = {
+                  '--tw-rotate-x': `-${value}deg`,
+                  transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+                };
+              }
+            });
+            rotateValues.forEach((value) => {
+              rotateYUtilities[`.rotate-y-${value}`] = {
+                '--tw-rotate-y': `${value}deg`,
+                transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+              };
+              if (value !== 0) {
+                rotateYUtilities[`.-rotate-y-${value}`] = {
+                  '--tw-rotate-y': `-${value}deg`,
+                  transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+                };
+              }
+            });
+            rotateValues.forEach((value) => {
+              rotateZUtilities[`.rotate-z-${value}`] = {
+                '--tw-rotate-z': `${value}deg`,
+                transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+              };
+              if (value !== 0) {
+                rotateZUtilities[`.-rotate-z-${value}`] = {
+                  '--tw-rotate-z': `-${value}deg`,
+                  transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+                };
+              }
+            });
+            const perspectiveUtilities = {
+              ".perspective-none": { perspective: "none" },
+              ".perspective-dramatic": { perspective: "100px" },
+              ".perspective-near": { perspective: "300px" },
+              ".perspective-normal": { perspective: "500px" },
+              ".perspective-midrange": { perspective: "800px" },
+              ".perspective-distant": { perspective: "1200px" },
+            };
+            const transformStyleUtilities = {
+              ".transform-style-preserve-3d": { "transform-style": "preserve-3d" },
+              ".transform-style-flat": { "transform-style": "flat" },
+            };
+            addUtilities({
+              ...rotateXUtilities,
+              ...rotateYUtilities,
+              ...rotateZUtilities,
+              ...perspectiveUtilities,
+              ...transformStyleUtilities,
+            });
+          }
+        ]
+      };
+    </script>
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+    <!-- Fonts (unchanged links) -->
+    <link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">.font-geist { font-family: 'Geist', sans-serif !important; }</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">.font-roboto { font-family: 'Roboto', sans-serif !important; }</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">.font-montserrat { font-family: 'Montserrat', sans-serif !important; }</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">.font-poppins { font-family: 'Poppins', sans-serif !important; }</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">.font-playfair { font-family: 'Playfair Display', serif !important; }</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">.font-merriweather { font-family: 'Merriweather', serif !important; }</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">.font-manrope { font-family: 'Manrope', sans-serif !important; }</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">.font-work-sans { font-family: 'Work Sans', sans-serif !important; }</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">.font-pt-serif { font-family: 'PT Serif', serif !important; }</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">.font-geist-mono { font-family: 'Geist Mono', monospace !important; }</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">.font-space-mono { font-family: 'Space Mono', monospace !important; }</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">.font-quicksand { font-family: 'Quicksand', sans-serif !important; }</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">.font-nunito { font-family: 'Nunito', sans-serif !important; }</style></head>
+  <body class="min-h-screen selection:bg-fuchsia-500/30 selection:text-white antialiased text-white font-space-grotesk bg-slate-950">
 
-export default App;
+    <!-- Background (component) added by Aura -->
+    <div class="aura-background-component top-0 w-full -z-10 absolute h-[900px]" data-alpha-mask="80" style="; mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)">
+      <div data-us-project="1bY8o6HVTI1oxJxuCJEG" class="absolute w-full h-full left-0 top-0 -z-10"></div>
+      <script type="text/javascript">
+        !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.31/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+      </script>
+    </div>
+
+    <div class="gradient-blur">
+      <div class=""></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <style>
+      .gradient-blur {
+        position: fixed;
+        z-index: 5;
+        inset: 0 0 auto 0;
+        height: 12%;
+        pointer-events: none;
+      }
+
+      .gradient-blur>div,
+      .gradient-blur::before,
+      .gradient-blur::after {
+        position: absolute;
+        inset: 0;
+      }
+
+      .gradient-blur::before {
+        content: "";
+        z-index: 1;
+        backdrop-filter: blur(0.5px);
+        mask: linear-gradient(to top,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 1) 12.5%,
+            rgba(0, 0, 0, 1) 25%,
+            rgba(0, 0, 0, 0) 37.5%);
+      }
+
+      .gradient-blur>div:nth-of-type(1) {
+        z-index: 2;
+        backdrop-filter: blur(1px);
+        mask: linear-gradient(to top,
+            rgba(0, 0, 0, 0) 12.5%,
+            rgba(0, 0, 0, 1) 25%,
+            rgba(0, 0, 0, 1) 37.5%,
+            rgba(0, 0, 0, 0) 50%);
+      }
+
+      .gradient-blur>div:nth-of-type(2) {
+        z-index: 3;
+        backdrop-filter: blur(2px);
+        mask: linear-gradient(to top,
+            rgba(0, 0, 0, 0) 25%,
+            rgba(0, 0, 0, 1) 37.5%,
+            rgba(0, 0, 0, 1) 50%,
+            rgba(0, 0, 0, 0) 62.5%);
+      }
+
+      .gradient-blur>div:nth-of-type(3) {
+        z-index: 4;
+        backdrop-filter: blur(4px);
+        mask: linear-gradient(to top,
+            rgba(0, 0, 0, 0) 37.5%,
+            rgba(0, 0, 0, 1) 50%,
+            rgba(0, 0, 0, 1) 62.5%,
+            rgba(0, 0, 0, 0) 75%);
+      }
+
+      .gradient-blur>div:nth-of-type(4) {
+        z-index: 5;
+        backdrop-filter: blur(8px);
+        mask: linear-gradient(to top,
+            rgba(0, 0, 0, 0) 50%,
+            rgba(0, 0, 0, 1) 62.5%,
+            rgba(0, 0, 0, 1) 75%,
+            rgba(0, 0, 0, 0) 87.5%);
+      }
+
+      .gradient-blur>div:nth-of-type(5) {
+        z-index: 6;
+        backdrop-filter: blur(16px);
+        mask: linear-gradient(to top,
+            rgba(0, 0, 0, 0) 62.5%,
+            rgba(0, 0, 0, 1) 75%,
+            rgba(0, 0, 0, 1) 87.5%,
+            rgba(0, 0, 0, 0) 100%);
+      }
+
+      .gradient-blur>div:nth-of-type(6) {
+        z-index: 7;
+        backdrop-filter: blur(32px);
+        mask: linear-gradient(to top,
+            rgba(0, 0, 0, 0) 75%,
+            rgba(0, 0, 0, 1) 87.5%,
+            rgba(0, 0, 0, 1) 100%);
+      }
+
+      .gradient-blur::after {
+        content: "";
+        z-index: 8;
+        backdrop-filter: blur(64px);
+        mask: linear-gradient(to top,
+            rgba(0, 0, 0, 0) 87.5%,
+            rgba(0, 0, 0, 1) 100%);
+      }
+    </style>
+
+    <!-- NAVBAR -->
+    <header class="sticky z-20 top-0">
+      <div class="flex max-w-7xl mr-auto ml-auto pt-4 pr-6 pb-4 pl-6 items-center justify-between">
+        <a href="#" class="inline-flex items-center justify-center bg-center mix-blend-normal w-[120px] h-[30px] bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e8f5b9d6-a5f3-4d21-986b-c559eef1bbf7_1600w.png)] bg-cover rounded"></a>
+        <nav class="hidden gap-6 md:flex gap-x-6 gap-y-6 items-center">
+          <a href="#features" class="nav-link hover:text-white text-xs sm:text-sm text-slate-300 relative">Features</a>
+          <a href="#gallery" class="nav-link relative text-xs sm:text-sm text-slate-300 hover:text-white">Gallery</a>
+          <a href="#reviews" class="nav-link relative text-xs sm:text-sm text-slate-300 hover:text-white">Reviews</a>
+          <a href="#faq" class="nav-link relative text-xs sm:text-sm text-slate-300 hover:text-white">FAQ</a>
+          <a href="#cta" class="inline-flex items-center gap-2 hover:bg-white/10 transition-colors text-xs sm:text-sm text-white bg-white/5 ring-white/10 ring-1 rounded-full pt-2 pr-4 pb-2 pl-4">
+            Get Started
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-right" class="lucide lucide-arrow-right h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+          </a>
+        </nav>
+        <button id="menuBtn" class="md:hidden rounded-lg p-2 text-slate-200 hover:bg-white/5 transition-colors" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="menu" class="lucide lucide-menu w-[24px] h-[24px]" data-icon-replaced="true" style="width: 24px; height: 24px; color: rgb(226, 232, 240);"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg>
+        </button>
+      </div>
+
+      <!-- Mobile drawer -->
+      <aside class="mobile-menu fixed z-50 bg-slate-950/95 w-[80%] max-w-sm border-white/10 border-l pt-6 pr-6 pb-6 pl-6 top-0 right-0 bottom-0 backdrop-blur" aria-label="Mobile menu" id="mobileMenu">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-medium">ConexusAI</span>
+          <button id="closeMenuBtn" class="rounded-lg p-2 text-slate-200 hover:bg-white/5 transition-colors" aria-label="Close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" class="lucide lucide-x h-6 w-6"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+          </button>
+        </div>
+        <ul class="mt-6 space-y-4">
+          <li>
+            <a href="#features" class="mobile-link block rounded-lg px-2 py-2 text-slate-300 hover:bg-white/5 hover:text-white transition-colors text-sm">Features</a>
+          </li>
+          <li>
+            <a href="#gallery" class="mobile-link block rounded-lg px-2 py-2 text-slate-300 hover:bg-white/5 hover:text-white transition-colors text-sm">Gallery</a>
+          </li>
+          <li>
+            <a href="#reviews" class="mobile-link block rounded-lg px-2 py-2 text-slate-300 hover:bg-white/5 hover:text-white transition-colors text-sm">Reviews</a>
+          </li>
+          <li>
+            <a href="#faq" class="mobile-link block rounded-lg px-2 py-2 text-slate-300 hover:bg-white/5 hover:text-white transition-colors text-sm">FAQ</a>
+          </li>
+        </ul>
+        <a href="#cta" class="mobile-link mt-6 inline-flex items-center gap-2 rounded-xl bg-white/5 px-4 py-2 text-xs sm:text-sm ring-1 ring-white/10 hover:bg-white/10 transition-colors">
+          Get Started
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-right" class="lucide lucide-arrow-right h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </aside>
+    </header>
+
+    <!-- HERO -->
+    <section class="max-w-7xl mr-auto ml-auto pt-16 pb-36 relative">
+      <div class="text-center max-w-3xl mr-auto ml-auto">
+        <h1 class="text-[44px] leading-[0.9] sm:text-6xl lg:text-8xl font-medium text-zinc-100 tracking-tight font-space-grotesk mt-20" style="text-shadow: 0 0 5px #ffffff, 0 0 15px #ffffff; mask-image: linear-gradient(290deg, transparent, black 0%, black 40%, transparent); -webkit-mask-image: linear-gradient(290deg, transparent, black 0%, black 40%, transparent);">The Agentic Group Chat</h1>
+
+        <div class="flex flex-wrap xl:mt-20 mt-40 gap-x-3 gap-y-3 items-center justify-center">
+          <div class="inline-block bg-transparent">
+            <style>
+              @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap');
+              @property --gradient-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+              @property --gradient-angle-offset { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+              @property --gradient-percent { syntax: "<percentage>"; initial-value: 20%; inherits: false; }
+              @property --gradient-shine { syntax: "<color>"; initial-value: #8484ff; inherits: false; }
+              .shiny-cta {
+                --gradient-angle: 0deg;
+                --gradient-angle-offset: 0deg;
+                --gradient-percent: 20%;
+                --gradient-shine: #8484ff;
+                --shadow-size: 2px;
+                position: relative;
+                overflow: hidden;
+                border-radius: 9999px;
+                padding: 1.25rem 2.5rem;
+                font-size: 1.125rem;
+                line-height: 1.2;
+                font-weight: 500;
+                color: #ffffff;
+                background: linear-gradient(#000000, #000000) padding-box,
+                  conic-gradient(
+                    from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+                    transparent 0%,
+                    #1d4ed8 5%,
+                    var(--gradient-shine) 15%,
+                    #1d4ed8 30%,
+                    transparent 40%,
+                    transparent 100%
+                  ) border-box;
+                border: 2px solid transparent;
+                box-shadow: inset 0 0 0 1px #1a1818;
+                outline: none;
+                transition:
+                  --gradient-angle-offset 800ms cubic-bezier(0.25, 1, 0.5, 1),
+                  --gradient-percent 800ms cubic-bezier(0.25, 1, 0.5, 1),
+                  --gradient-shine 800ms cubic-bezier(0.25, 1, 0.5, 1),
+                  box-shadow 0.3s;
+                cursor: pointer;
+                isolation: isolate;
+                outline-offset: 4px;
+                font-family: 'Inter', 'Helvetica Neue', sans-serif;
+                z-index: 0;
+                animation: border-spin 2.5s linear infinite;
+              }
+              @keyframes border-spin {
+                to { --gradient-angle: 360deg; }
+              }
+              .shiny-cta:active { transform: translateY(1px); }
+              .shiny-cta::before {
+                content: '';
+                pointer-events: none;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 0;
+                --size: calc(100% - 6px);
+                --position: 2px;
+                --space: 4px;
+                width: var(--size);
+                height: var(--size);
+                background:
+                  radial-gradient(circle at var(--position) var(--position), white 0.5px, transparent 0)
+                  padding-box;
+                background-size: var(--space) var(--space);
+                background-repeat: space;
+                mask-image:
+                  conic-gradient(
+                    from calc(var(--gradient-angle) + 45deg),
+                    black,
+                    transparent 10% 90%,
+                    black
+                  );
+                border-radius: inherit;
+                opacity: 0.4;
+                pointer-events: none;
+              }
+              .shiny-cta::after {
+                content: '';
+                pointer-events: none;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 1;
+                width: 100%;
+                aspect-ratio: 1;
+                background: linear-gradient(-50deg, transparent, #1d4ed8, transparent);
+                mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+                opacity: 0.6;
+                animation: shimmer 4s linear infinite;
+                animation-play-state: running;
+              }
+              .shiny-cta span {
+                position: relative;
+                z-index: 2;
+                display: inline-block;
+              }
+              .shiny-cta span::before {
+                content: '';
+                pointer-events: none;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                z-index: -1;
+                --size: calc(100% + 1rem);
+                width: var(--size);
+                height: var(--size);
+                box-shadow: inset 0 -1ex 2rem 4px #1d4ed8;
+                opacity: 0;
+                border-radius: inherit;
+                transition: opacity 800ms cubic-bezier(0.25, 1, 0.5, 1);
+                animation: breathe 4.5s linear infinite;
+              }
+              @keyframes shimmer {
+                to { transform: translate(-50%, -50%) rotate(360deg); }
+              }
+              @keyframes breathe {
+                0%, 100% { transform: translate(-50%, -50%) scale(1); }
+                50% { transform: translate(-50%, -50%) scale(1.20); }
+              }
+            </style>
+            <button id="waitlist-button" class="shiny-cta focus:outline-none">
+              <span class="">I'm interested, join waitlist</span>
+          </button></div>
+          <a href="#gallery" class="inline-flex items-center gap-2 hover:bg-white5 transition-colors text-xs sm:text-sm text-white border-white/10 border rounded-full pt-3 pr-5 pb-3 pl-5 backdrop-blur-2xl">
+            See Demo
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 2424" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="play-circle" class="lucide lucide-play-circle h-4 w-4"><path d="M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z"></path><circle cx="12" cy="12" r="10"></circle></svg>
+          </a>
+        </div>
+
+        <!-- Waitlist area: form + counter + usernames + uptime -->
+        <div id="waitlist-area" class="mt-10 flex flex-col items-center gap-4">
+          <div class="w-full flex flex-col items-center gap-4">
+            <!-- Form wrapper (hidden until CTA clicked) -->
+            <div id="waitlist-form-wrapper" class="flex flex-col items-center gap-3 w-full max-w-xl mx-auto hidden">
+              <form id="waitlist-form" class="flex flex-wrap items-center justify-center gap-3 w-full">
+                <input type="text" name="username" required="" placeholder="Username" class="flex-1 min-w-[120px] bg-white/5 border border-white/10 rounded-full px-4 py-2 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/40">
+                <input type="email" name="email" required="" placeholder="Email" class="flex-1 min-w-[160px] bg-white/5 border border-white/10 rounded-full px-4 py-2 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/40">
+                <button type="submit" class="inline-flex items-center gap-2 text-xs sm:text-sm text-white bg-white/10 border border-white/10 rounded-full px-4 py-2 hover:bg-white/20 transition-colors whitespace-nowrap">
+                  Join waitlist
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                    <path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>
+                  </svg>
+                </button>
+              </form>
+              <p id="waitlist-feedback" class="text-xs sm:text-sm text-emerald-400 hidden">
+                Thanks, you're on the list.
+              </p>
+            </div>
+
+            <!-- Counter + uptime + usernames -->
+            <div class="w-full max-w-2xl mx-auto flex flex-col md:flex-row items-stretch md:items-start gap-3 md:gap-4">
+              <!-- Counter + uptime -->
+              <div class="flex-1 flex flex-col items-center md:items-start gap-1">
+                <p class="text-xs sm:text-sm text-slate-300">
+                  <span id="waitlist-count" class="font-medium">0</span> joined so far
+                </p>
+                <p class="text-[0.7rem] sm:text-xs text-slate-400">
+                  Page has been running for
+                  <span id="uptime-counter" class="font-geist-mono text-slate-200">2d 22h 33m 30s</span>
+                </p>
+              </div>
+
+              <!-- Usernames list -->
+              <div class="flex-1">
+                <div class="text-xs text-slate-400 mb-1">
+                  Latest usernames
+                </div>
+                <div id="waitlist-usernames" class="bg-white/5 border border-white/10 rounded-xl max-h-32 overflow-y-auto text-xs sm:text-sm text-slate-200 text-left px-3 py-2"><p class="text-xs text-slate-500">No one has joined yet.</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End waitlist area -->
+      </div>
+    </section>
+
+    <!-- FEATURES & rest of page: unchanged below this line -->
+    <section class="sm:px-6 lg:px-8 max-w-7xl mr-auto ml-auto pr-4 pb-24 pl-4" id="features">
+      <div class="grid lg:gap-14 gap-x-10 gap-y-10">
+        <!-- Row 1 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 items-start">
+          <div class="overflow-hidden aspect-video flex bg-white/5 border-white/10 border rounded-2xl relative items-center justify-center">
+            <span class="sm:text-sm text-xs text-slate-300">Demo almost here</span>
+          </div>
+          <div class="space-y-3 flex flex-col justify-start md:mt-2">
+            <h2 class="sm:text-3xl text-2xl font-medium text-white tracking-tight">Use many agentic LLM's in the same message</h2>
+            <p class="sm:text-base text-sm text-slate-300">Get many tasks done by many different SOTA agentic models simultaneously per message. In a message, use group chat commands to concurrently ping up to 9 agents at the same time, give them each different tasks, they all come back as fast as they can, in one or two response times when from different providers.</p>
+            <p class="sm:text-base text-sm text-slate-400">Like: @z.ai/glm-4.6 Follow Wendy's on Twitter @openai/gpt-5.1 Canva presentation on idea I posted to slack @deepseek/deepseek-r1 go to YouTube, unsubscribe to channel you like least</p>
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 items-start">
+          <div class="space-y-3 order-2 md:order-1 flex flex-col justify-start md:mt-2">
+            <h2 class="sm:text-3xl text-2xl font-medium text-white tracking-tight">Connect to over 500+ apps and automate</h2>
+            <p class="sm:text-base text-sm text-slate-400">Like Gmail, Reddit, Notion, Twitter, Youtube, Canva, Github, Supabase, Slack, Monday, Hubspot, Clickup, n8n, zapier, make.com and hundreds more. Set up via Rube MCP.</p><p class="sm:text-base text-sm text-slate-300">Your agents can access and complete tasks on over 500+ apps. You can connect n8n, zapier and make.com for automating between thousands more. You can casually ask them to do stuff like "Make presentation" or "Generate music video, post to YouTube" and they will understand. You can connect as many tool servers (like automative ones) as you like, to go above the 500. These agents actually complete tasks.</p>
+            <p class="sm:text-base text-sm text-slate-400">Get up to 9 of those tasks done in about 1 response time.</p>
+          </div>
+          <div class="overflow-hidden aspect-video flex order-1 md:order-2 bg-white/5 border-white/10 border rounded-2xl relative items-center justify-center">
+            <span class="sm:text-sm text-xs text-slate-300">Demo almost here</span>
+          </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+          <div class="relative rounded-2xl border border-white/10 bg-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <span class="sm:text-sm text-xs text-slate-300">Before / after comparison image for ConexusAI</span>
+          </div>
+          <div class="space-y-3 flex flex-col justify-start md:mt-2">
+            <h2 class="text-2xl sm:text-3xl font-medium tracking-tight text-white">Battalions of agents</h2>
+            <p class="sm:text-base text-sm text-slate-300">Around 800+ flagship agentic models. 50+ free agentic models. And 30+ elite agentic flagships. Conexus turns any AI model agentic, and into a minion; so you can connect any API connection for more models. For power plan users, all of huggingface.co's models and items are also connected.</p>
+            <p class="sm:text-base text-sm text-slate-400">The rich number of total agentic models is based off of all flagships deemed wanted or in demand. The best models in the industry are dynamically added to subscribers. All of them are useful, all of them are useable.</p>
+          </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+          <div class="space-y-3 order-2 md:order-1 flex flex-col justify-start md:mt-2">
+            <h2 class="sm:text-3xl text-2xl font-medium text-white tracking-tight">Agents can use many other agents at the same time </h2>
+            <p class="sm:text-base text-sm text-slate-300">Agents can use other agents. The agent/s will try to use the least amount of agents as possible to minimise costs unless told otherwise, while making a mission of using prompting tools to get whatever you said done.</p>
+            <p class="sm:text-base text-sm text-slate-400">Like: @anthropic/claude-4.1-opus Create a plan to web scrape and clone YouTube. Use agents. @openai/gpt-5.1 How can I make an n8n workflow for generating infinite AI gen music?</p>
+          </div>
+          <div class="relative rounded-2xl border border-white/10 bg-white/5 overflow-hidden aspect-video flex items-center justify-center order-1 md:order-2">
+            <span class="text-xs sm:text-sm text-slate-300">Team collaboration GIF / video</span>
+          </div>
+        </div>
+
+        <!-- Row 5 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 items-start">
+          <div class="relative rounded-2xl border border-white/10 bg-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <span class="text-xs sm:text-sm text-slate-300">Gallery of generated outputs, or a looping reel</span>
+          </div>
+          <div class="space-y-3 flex flex-col justify-start md:mt-2">
+            <h2 class="sm:text-3xl text-2xl font-medium text-white tracking-tight">Agents can generate images, videos, music audio, presentations, graphs and webpages</h2>
+            <p class="sm:text-base text-sm text-slate-300">Agents can generate images, videos, and music via ComfyUI setup, among many other connectable and given streams. Agents can create presentations via Canva connection. Agents can design webpages via Figma and Webflow. You can connect your Claude Code, Codex, Gemini CLI, Qwen code and Cursor agents. Agents have web search, deep research and Sora/Nano pipelines if connected. Agents can use eachother.</p>
+            <p class="sm:text-base text-sm text-slate-400">Every agent is special</p>
+          </div>
+        </div>
+
+        <!-- Row 6 (new) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 items-start">
+          <div class="space-y-3 order-2 md:order-1 flex flex-col justify-start md:mt-2">
+            <h2 class="sm:text-3xl text-2xl font-medium text-white tracking-tight">Introduction to Automations</h2>
+            <p class="sm:text-base text-sm text-slate-300">In Conexus, you can chat with agentic workflows from your n8n via pipeline setup, and your agents can trigger Zaps from Zapier and Scenarios from Make. This opens up a whole new world of automation control between thousands of apps. However you will need to have Zapier, Make.com and N8N to begin with. We are still in beta, so we havent given agents the ability to make automations by themselves, only trigger and use them, given they are connected.</p>
+            <p class="sm:text-base text-sm text-slate-400">
+              Define which workflows should auto‑run end‑to‑end, and which should pause for you or your team to confirm, edit, or reroute before they execute.
+            </p>
+          </div>
+          <div class="relative rounded-2xl border border-white/10 bg-white/5 overflow-hidden aspect-video flex items-center justify-center order-1 md:order-2">
+            <span class="text-xs sm:text-sm text-slate-300">Approval step / review screen mockup or animation</span>
+          </div>
+        </div>
+
+        <!-- Row 7 (new) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 items-start">
+          <div class="relative rounded-2xl border border-white/10 bg-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <span class="text-xs sm:text-sm text-slate-300">Analytics dashboard of agent performance / cost savings</span>
+          </div>
+          <div class="space-y-3 flex flex-col justify-start md:mt-2">
+            <h2 class="sm:text-3xl text-2xl font-medium text-white tracking-tight">Connect your Claude Code, Codex, Cursor agent, Qwen CLI and Gemini CLI</h2>
+            <p class="sm:text-base text-sm text-slate-300">Connect all of your CLI tools in one interface, with a preview, easy switching, and easy to use chat like interface for all. </p>
+            <p class="sm:text-base text-sm text-slate-400">IDE like editable preview area, along with a place to view generated work by your CLI's. Switch between them in the same chat.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECOND WAITLIST BLOCK (duplicate, wired to same data) -->
+    <section id="cta" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+      <div class="border border-white/10 rounded-3xl bg-white/5 px-6 sm:px-10 py-10 flex flex-col items-center gap-6 text-center">
+        <h2 class="text-2xl sm:text-3xl font-medium tracking-tight text-white">
+          Join the CønexusAI waitlist
+        </h2>
+        <p class="text-sm sm:text-base text-slate-300 max-w-xl">
+          Be the first to orchestrate teams of agents. Same live counter and usernames as above, so everything stays in sync.
+        </p>
+
+        <!-- Button + form -->
+        <button id="waitlist-button-2" class="shiny-cta focus:outline-none">
+          <span class="">I'm interested, join waitlist</span>
+        </button>
+
+        <div id="waitlist-form-wrapper-2" class="flex flex-col items-center gap-3 w-full max-w-xl mx-auto hidden">
+          <form id="waitlist-form-2" class="flex flex-wrap items-center justify-center gap-3 w-full">
+            <input type="text" name="username" required="" placeholder="Username" class="flex-1 min-w-[120px] bg-white/5 border border-white/10 rounded-full px-4 py-2 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/40">
+            <input type="email" name="email" required="" placeholder="Email" class="flex-1 min-w-[160px] bg-white/5 border border-white/10 rounded-full px-4 py-2 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/40">
+            <button type="submit" class="inline-flex items-center gap-2 text-xs sm:text-sm text-white bg-white/10 border border-white/10 rounded-full px-4 py-2 hover:bg-white/20 transition-colors whitespace-nowrap">
+              Join waitlist
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                <path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </button>
+          </form>
+          <p id="waitlist-feedback-2" class="text-xs sm:text-sm text-emerald-400 hidden">
+            Thanks, you're on the list.
+          </p>
+        </div>
+
+        <!-- Shared counter + uptime + usernames -->
+        <div class="w-full max-w-2xl mx-auto flex flex-col md:flex-row items-stretch md:items-start gap-3 md:gap-4">
+          <div class="flex-1 flex flex-col items-center md:items-start gap-1">
+            <p class="text-xs sm:text-sm text-slate-300">
+              <span id="waitlist-count-2" class="font-medium">0</span> joined so far
+            </p>
+            <p class="text-[0.7rem] sm:text-xs text-slate-400">
+              Page has been running for
+              <span id="uptime-counter-2" class="font-geist-mono text-slate-200">2d 22h 33m 30s</span>
+            </p>
+          </div>
+
+          <div class="flex-1">
+            <div class="text-xs text-slate-400 mb-1">
+              Latest usernames
+            </div>
+            <div id="waitlist-usernames-2" class="bg-white/5 border border-white/10 rounded-xl max-h-32 overflow-y-auto text-xs sm:text-sm text-slate-200 text-left px-3 py-2"><p class="text-xs text-slate-500">No one has joined yet.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Existing large feature app mockup (unchanged placeholder) -->
+    <div class="flex xl:pt-0 xl:pb-0 sm:pl-4 sm:pr-4 sm:pt-20 w-screen h-1000 pt-20 pr-2 pb-40 pl-2 scale-100 rotate-x-5 items-center justify-center" style="mask-image: linear-gradient(180deg, transparent, black 0%, black 1%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, black 0%, black 1%, transparent);">
+      <!-- ... original content unchanged ... -->
+    </div>
+
+    <!-- Core JS for waitlist + uptime + mobile menu -->
+    <script>
+      (function() {
+        const STORAGE_KEY = 'conexus_waitlist_users';
+        const START_KEY = 'conexus_page_start';
+
+        const waitlistButton = document.getElementById('waitlist-button');
+        const formWrapper = document.getElementById('waitlist-form-wrapper');
+        const form = document.getElementById('waitlist-form');
+        const feedback = document.getElementById('waitlist-feedback');
+        const countEl = document.getElementById('waitlist-count');
+        const usernamesEl = document.getElementById('waitlist-usernames');
+        const uptimeEl = document.getElementById('uptime-counter');
+
+        // Second block elements
+        const waitlistButton2 = document.getElementById('waitlist-button-2');
+        const formWrapper2 = document.getElementById('waitlist-form-wrapper-2');
+        const form2 = document.getElementById('waitlist-form-2');
+        const feedback2 = document.getElementById('waitlist-feedback-2');
+        const countEl2 = document.getElementById('waitlist-count-2');
+        const usernamesEl2 = document.getElementById('waitlist-usernames-2');
+        const uptimeEl2 = document.getElementById('uptime-counter-2');
+
+        function loadUsers() {
+          try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return [];
+            const parsed = JSON.parse(raw);
+            if (!Array.isArray(parsed)) return [];
+            return parsed.filter(u => u && typeof u.username === 'string' && typeof u.email === 'string');
+          } catch {
+            return [];
+          }
+        }
+
+        function saveUsers(users) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+        }
+
+        function renderUsers() {
+          const users = loadUsers();
+          const len = users.length;
+          countEl.textContent = len.toString();
+          if (countEl2) countEl2.textContent = len.toString();
+
+          function renderList(container) {
+            container.innerHTML = '';
+            if (len === 0) {
+              const p = document.createElement('p');
+              p.textContent = 'No one has joined yet.';
+              p.className = 'text-xs text-slate-500';
+              container.appendChild(p);
+              return;
+            }
+            const ul = document.createElement('ul');
+            ul.className = 'space-y-1';
+            users
+              .slice()
+              .reverse()
+              .forEach(u => {
+                const li = document.createElement('li');
+                li.textContent = u.username;
+                li.className = 'text-xs sm:text-sm text-slate-200 truncate';
+                ul.appendChild(li);
+              });
+            container.appendChild(ul);
+          }
+
+          renderList(usernamesEl);
+          if (usernamesEl2) renderList(usernamesEl2);
+        }
+
+        function ensureStartTime() {
+          let start = localStorage.getItem(START_KEY);
+          if (!start) {
+            start = Date.now().toString();
+            localStorage.setItem(START_KEY, start);
+          }
+          return parseInt(start, 10) || Date.now();
+        }
+
+        function formatDuration(ms) {
+          let seconds = Math.floor(ms / 1000);
+          const days = Math.floor(seconds / (24 * 3600));
+          seconds -= days * 24 * 3600;
+          const hours = Math.floor(seconds / 3600);
+          seconds -= hours * 3600;
+          const minutes = Math.floor(seconds / 60);
+          seconds -= minutes * 60;
+
+          const pad = n => n.toString().padStart(2, '0');
+          return `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
+        }
+
+        function startUptimeTimer() {
+          const start = ensureStartTime();
+          function tick() {
+            const now = Date.now();
+            const diff = now - start;
+            const formatted = formatDuration(diff);
+            uptimeEl.textContent = formatted;
+            if (uptimeEl2) uptimeEl2.textContent = formatted;
+          }
+          tick();
+          setInterval(tick, 1000);
+        }
+
+        function handleSubmit(e, formEl, feedbackEl) {
+          e.preventDefault();
+          const formData = new FormData(formEl);
+          const username = (formData.get('username') || '').toString().trim();
+          const email = (formData.get('email') || '').toString().trim();
+
+          if (!username || !email) return;
+
+          const users = loadUsers();
+          if (!users.some(u => u.username === username && u.email === email)) {
+            users.push({ username, email, joinedAt: Date.now() });
+            saveUsers(users);
+          }
+
+          renderUsers();
+          formEl.reset();
+          if (feedbackEl) {
+            feedbackEl.classList.remove('hidden');
+            setTimeout(() => {
+              feedbackEl.classList.add('hidden');
+            }, 2500);
+          }
+        }
+
+        waitlistButton.addEventListener('click', () => {
+          if (formWrapper.classList.contains('hidden')) {
+            formWrapper.classList.remove('hidden');
+          }
+          const firstInput = form.querySelector('input[name="username"]');
+          if (firstInput) firstInput.focus();
+        });
+
+        if (waitlistButton2 && formWrapper2) {
+          waitlistButton2.addEventListener('click', () => {
+            if (formWrapper2.classList.contains('hidden')) {
+              formWrapper2.classList.remove('hidden');
+            }
+            const firstInput = form2.querySelector('input[name="username"]');
+            if (firstInput) firstInput.focus();
+          });
+        }
+
+        form.addEventListener('submit', (e) => handleSubmit(e, form, feedback));
+        if (form2) {
+          form2.addEventListener('submit', (e) => handleSubmit(e, form2, feedback2));
+        }
+
+        renderUsers();
+        startUptimeTimer();
+
+        // Mobile menu wiring
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        if (menuBtn && closeMenuBtn && mobileMenu) {
+          menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+          });
+          closeMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+          });
+          mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+              mobileMenu.classList.remove('open');
+            });
+          });
+        }
+      })();</script></body></html>
