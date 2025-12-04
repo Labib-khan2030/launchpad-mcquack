@@ -14,6 +14,7 @@ import { Users } from "lucide-react";
 export const WaitlistButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [count, setCount] = useState(0);
+  const [latestUsernames, setLatestUsernames] = useState<string[]>([]);
 
   const fetchCount = async () => {
     const { count: waitlistCount, error } = await supabase
@@ -25,8 +26,21 @@ export const WaitlistButton = () => {
     }
   };
 
+  const fetchLatestUsernames = async () => {
+    const { data, error } = await supabase
+      .from("waitlist")
+      .select("username")
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    if (!error && data) {
+      setLatestUsernames(data.map((row) => row.username));
+    }
+  };
+
   useEffect(() => {
     fetchCount();
+    fetchLatestUsernames();
 
     // Subscribe to changes
     const channel = supabase
@@ -40,6 +54,7 @@ export const WaitlistButton = () => {
         },
         () => {
           fetchCount();
+          fetchLatestUsernames();
         }
       )
       .subscribe();
@@ -68,6 +83,20 @@ export const WaitlistButton = () => {
         {count > 0 && (
           <div className="text-gray-400 text-sm">
             <span className="text-white font-semibold">{count}</span> joined so far
+          </div>
+        )}
+        {latestUsernames.length > 0 && (
+          <div className="mt-2 w-full max-w-md">
+            <p className="text-xs text-gray-400 mb-1 text-center">Latest usernames</p>
+            <div className="bg-slate-900/50 border border-slate-700 rounded-lg max-h-32 overflow-y-auto p-2">
+              <ul className="space-y-1">
+                {latestUsernames.map((username, idx) => (
+                  <li key={idx} className="text-xs text-slate-200 truncate text-center">
+                    {username}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         )}
       </div>
