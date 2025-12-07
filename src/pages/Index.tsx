@@ -86,19 +86,19 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-muted/10 border border-border/50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center hover:border-accent/50 transition-colors">
-              <div className="text-center p-8">
-                <p className="text-muted-foreground text-sm">
-                  Add your demo image here
-                </p>
-              </div>
+            <div className="bg-muted/10 border border-border/50 rounded-xl overflow-hidden aspect-[4/3] hover:border-accent/50 transition-colors">
+              <img 
+                src="/demos/demo1.gif" 
+                alt="Feature Demo 1" 
+                className="w-full h-full object-cover"
+              />
             </div>
-            <div className="bg-muted/10 border border-border/50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center hover:border-accent/50 transition-colors">
-              <div className="text-center p-8">
-                <p className="text-muted-foreground text-sm">
-                  Add your demo image here
-                </p>
-              </div>
+            <div className="bg-muted/10 border border-border/50 rounded-xl overflow-hidden aspect-[4/3] hover:border-accent/50 transition-colors">
+              <img 
+                src="/demos/demo2.gif" 
+                alt="Feature Demo 2" 
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>
@@ -115,12 +115,12 @@ const Index = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="bg-muted/10 border border-border/50 rounded-xl overflow-hidden aspect-video flex items-center justify-center hover:border-accent/50 transition-colors">
-              <div className="text-center p-8">
-                <p className="text-muted-foreground text-sm">
-                  Add your demo GIF or video here
-                </p>
-              </div>
+            <div className="bg-muted/10 border border-border/50 rounded-xl overflow-hidden aspect-video hover:border-accent/50 transition-colors">
+              <img 
+                src="/demos/demo3.png" 
+                alt="Feature Demo 3" 
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>
